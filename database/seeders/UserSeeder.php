@@ -16,12 +16,14 @@ class UserSeeder extends Seeder
     public function run()
     {
         $users = [
+            ['name' => 'SuperUser', 'username' => 'SuperUser','email' => 'SuperUser@gmail.com', 'password' => Hash::make('1234Asdf'),
+                'role_id' => 1, 'created_at' => '2021-10-08 ', 'updated_at' => '2021-10-08'],
             ['name' => 'Admin', 'username' => 'Admin','email' => 'Admin@gmail.com', 'password' => Hash::make('1234Asdf'),
-                'created_at' => '2021-10-08 ', 'updated_at' => '2021-10-08'],
+                'role_id' => 2, 'created_at' => '2021-10-08 ', 'updated_at' => '2021-10-08'],
             ['name' => 'Lara', 'username' => 'Lara', 'email' => 'Lara@gmail.com', 'password' => Hash::make('1234Asdf'),
-                'created_at' => '2021-10-08', 'updated_at' => '2021-10-08'],
+                'role_id' => 3, 'created_at' => '2021-10-08', 'updated_at' => '2021-10-08'],
             ['name' => 'Ana','username' => 'Ana' , 'email' => 'Ana@gmail.com', 'password' => Hash::make('1234Asdf'),
-                'created_at' => '2021-10-09', 'updated_at' => '2021-10-09'],
+                'role_id' => 3, 'created_at' => '2021-10-09', 'updated_at' => '2021-10-09'],
 
         ];
         User::insert($users);

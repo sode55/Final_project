@@ -20,10 +20,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:api')->post('register', 'RegisterController@apiRegister');
+//Route::post('register', 'RegisterController@apiRegister');
+//Route::post('login', 'LoginController@apiLogin');
 
-Route::middleware('auth:api')->post('login', 'LoginController@apiLogin');
+
+Route::post('/login', 'PassportAuthController@apiLogin');
+Route::post('/register', 'PassportAuthController@apiRegister');
+
+Route::middleware(['auth:api', 'permission:superUser, admin, companyOwner'])->group(function ()
+{
+    Route::post('vehicle', 'VehicleController@apiAddVehicle');
+    Route::put('vehicle/edit/{id}', 'VehicleController@apiUpdateVehicle');
+    Route::delete('archive/{id}', 'VehicleController@apiAddToArchive');
+    Route::get('show/archive', 'VehicleController@apiShowArchive');
+});
+
+Route::middleware('auth:api')->post('/company', 'CompanyController@apiStoreCompany');
 
 
-//Route::middleware('auth:api')->post('login', 'PassportAuthController@apiLogin');
-//Route::middleware('auth:api')->post('register', 'PassportAuthController@apiRegister');

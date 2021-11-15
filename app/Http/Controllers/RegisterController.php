@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterStoreRequest;
 use Illuminate\Support\Facades\Http;
-//use APP\Http\Traits\Responses;
+use App\Http\Traits\Responses;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
 use App\Models\User;
@@ -12,19 +12,20 @@ use Throwable;
 
 class RegisterController extends Controller
 {
+    use Responses;
+
     public function apiRegister(RegisterStoreRequest $request)
     {
-
         try {
+            $request->validated();
 
-            $validator = $request->validated();
-            $data = $request->all();
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors()->first(), 422);
-            }
-            $data['password'] = bcrypt($request->password);
-            $user = User::create($data);
+            $data = [
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ];
+             User::create($data);
 
 
             $client = Client::where('password_client', 1)->firstOrFail();
@@ -37,11 +38,9 @@ class RegisterController extends Controller
                 'password' => $request->password,
                 'scope' => ''
             ]);
-            return  response()->json($response->message()->first(), 200);
-        } catch (Throwable $e) {
-            return response()->json([
-                'error' => $e->getMessage()
-            ]);
+            return  $this->getMessage($response->json(), $response->status());
+        }catch (Throwable $e) {
+            return $this->getError($response()->json(), $response()->status());
 
         }
     }

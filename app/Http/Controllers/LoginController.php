@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginStoreRequest;
 use Illuminate\Support\Facades\Http;
-//use APP\Http\Traits\Responses;
-use Illuminate\Http\Request;
+use App\Http\Traits\Responses;
+//use Illuminate\Http\Request;
 use Laravel\Passport\Client;
 use Throwable;
 
 
 class LoginController extends Controller
 {
-//    use Responses;
+    use Responses;
 
 
     public function apiLogin(LoginStoreRequest $request)
@@ -29,9 +29,9 @@ class LoginController extends Controller
             'password' => $request->password,
             'scope' => ''
         ]);
-        return  response()->json($response->message()->first(), 200);
+        return  $this->getMessage($response->json(), $response->status());
         }catch (Throwable $e) {
-            return $this->getError($response()->json(), $response()->status('422'));
+            return $this->getError($response()->json(), $response()->status());
         }
 
     }
