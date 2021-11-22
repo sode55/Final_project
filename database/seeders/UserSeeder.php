@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             ['name' => 'Lara', 'username' => 'Lara', 'email' => 'Lara@gmail.com', 'password' => Hash::make('1234Asdf'),
                 'role_id' => 3, 'created_at' => '2021-10-08', 'updated_at' => '2021-10-08'],
             ['name' => 'Ana','username' => 'Ana' , 'email' => 'Ana@gmail.com', 'password' => Hash::make('1234Asdf'),
-                'role_id' => 3, 'created_at' => '2021-10-09', 'updated_at' => '2021-10-09'],
+                'role_id' => 4, 'created_at' => '2021-10-09', 'updated_at' => '2021-10-09'],
 
         ];
         User::insert($users);

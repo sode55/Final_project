@@ -3,29 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Vehicle extends Model
+class Comment extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $table = 'vehicles';
+    protected $table = 'comments';
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['id'];
+    protected $hidden = ['company_id'];
 
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
-
-    public function reserves()
-    {
-        return $this->hasMany(Reserve::class);
-    }
-
-
 }

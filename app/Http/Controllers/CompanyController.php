@@ -19,8 +19,9 @@ class CompanyController extends Controller
 
 
             $company = Company::create([
-                'company_name' => $request->company_name,
+                'name' => $request->name,
                 'phone_number' => $request->phone_number,
+                'email' => $request->email,
                 'address' => $request->address,
               ]);
 
@@ -36,8 +37,30 @@ class CompanyController extends Controller
             ]);
         } catch (Throwable $e) {
             return response()->json([
-                'error' => $e->getMessage()
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),
+                ]);
+        }
+    }
+
+    public function apiShowCompany()
+    {
+        try {
+            $company = Company::inRandomOrder()->limit(5)->get(['name', 'phone_number', 'email', 'address']);
+
+//            return  $this->getMessage($response->json(), $response->status());
+//        }catch (Throwable $e) {
+//            return $this->getError($response()->json(), $response()->status());
+
+            return response()->json([
+                "success" => true,
+                "message" => "لیست شرکت های طرف قرارداد.",
+                "data" => $company
             ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),            ]);
         }
     }
 }

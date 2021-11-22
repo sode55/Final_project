@@ -13,6 +13,8 @@ class Company extends Model
 
     protected $guarded = ['id'];
 
+    protected $hidden = ['id'];
+
     public function vehicles(){
         return $this->hasMany(Vehicle::class);
     }
@@ -20,5 +22,10 @@ class Company extends Model
     public function user()
     {
         return $this->hasOne(User::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }

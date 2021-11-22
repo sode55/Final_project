@@ -21,21 +21,16 @@ class VehicleController extends Controller
     public function apiAddVehicle(VehicleRequest $request)
 
     {
-//
         try {
 
             $request->validated();
 
             $vehicle = Vehicle::create([
-                'vehicle_name' => $request->vehicle_name,
-                'vehicle_model' => $request->vehicle_model,
-                'vehicle_accessories' => $request->vehicle_accessories,
-                'number_of_sits' => $request->number_of_sits,
+                'name' => $request->name,
+                'model' => $request->model,
+                'accessories' => $request->accessories,
+                'No_of_sits' => $request->No_of_sits,
                 'plate_number' => $request->plate_number,
-                'origin' => $request->origin,
-                'destination' => $request->destination,
-                'departure_date' => $request->departure_date,
-                'departure_time' => $request->departure_time,
                 'company_id' => $request->company_id,
             ]);
 
@@ -52,8 +47,9 @@ class VehicleController extends Controller
             ]);
         } catch (Throwable $e) {
             return response()->json([
-                'error' => $e->getMessage()
-            ]);
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),
+                ]);
         }
     }
 
@@ -79,16 +75,11 @@ class VehicleController extends Controller
                 return response()->json('unauthorized' , 403);
             }
 
-            $vehicle->vehicle_name = $input['vehicle_name'];
-            $vehicle->vehicle_model = $input['vehicle_model'];
-            $vehicle->vehicle_accessories = $input['vehicle_accessories'];
-            $vehicle->number_of_sits = $input['number_of_sits'];
+            $vehicle->name = $input['name'];
+            $vehicle->model = $input['model'];
+            $vehicle->accessories = $input['accessories'];
+            $vehicle->No_of_sits = $input['No_of_sits'];
             $vehicle->plate_number = $input['plate_number'];
-            $vehicle->origin = $input['origin'];
-            $vehicle->destination = $input['destination'];
-            $vehicle->departure_date = $input['departure_date'];
-            $vehicle->departure_time = $input['departure_time'];
-//            $vehicle->company_id = $input['company_id'];
             $vehicle->save();
 
 //            return  $this->getMessage($response->json(), $response->status());
@@ -103,8 +94,9 @@ class VehicleController extends Controller
             ]);
         } catch (Throwable $e) {
             return response()->json([
-                'error' => $e->getMessage()
-            ]);
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),
+                ]);
         }
     }
 
@@ -140,8 +132,9 @@ class VehicleController extends Controller
             ]);
         } catch (Throwable $e) {
             return response()->json([
-                'error' => $e->getMessage()
-            ]);
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),
+                ]);
         }
     }
 
@@ -164,8 +157,9 @@ class VehicleController extends Controller
             ]);
         } catch (Throwable $e) {
             return response()->json([
-                'error' => $e->getMessage()
-            ]);
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),
+                ]);
         }
     }
 }

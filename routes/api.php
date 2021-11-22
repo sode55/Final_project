@@ -27,14 +27,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', 'PassportAuthController@apiLogin');
 Route::post('/register', 'PassportAuthController@apiRegister');
 
-Route::middleware(['auth:api', 'permission:superUser, admin, companyOwner'])->group(function ()
+Route::middleware(['auth:api', 'permission:superUser, admin, company_owner'])->group(function ()
 {
-    Route::post('vehicle', 'VehicleController@apiAddVehicle');
+    Route::post('vehicle/store', 'VehicleController@apiAddVehicle');
     Route::put('vehicle/edit/{id}', 'VehicleController@apiUpdateVehicle');
-    Route::delete('archive/{id}', 'VehicleController@apiAddToArchive');
+    Route::delete('bus/{id}', 'VehicleController@apiAddToArchive');
     Route::get('show/archive', 'VehicleController@apiShowArchive');
+
+    Route::post('date/store', 'ReserveController@apiAddDateTime');
+    Route::put('date/edit/{id}', 'ReserveController@apiUpdateDateTime');
 });
 
-Route::middleware('auth:api')->post('/company', 'CompanyController@apiStoreCompany');
+Route::middleware('auth:api')
+    ->post('/company/store', 'CompanyController@apiStoreCompany');
+Route::get('/company/show', 'CompanyController@apiShowCompany');
 
 
+Route::middleware(['auth:api', 'permission:superUser, admin, company_owner'])
+    ->post('/comment/store', 'CommentController@apiAddComment');
+Route::get('/comments/show', 'CommentController@apiShowComments');
+
+Route::post('/bus/show', 'ReserveController@apiShowBus');
+Route::post('/bus/show/orderBY', 'ReserveController@apiShowBusOrderBy');
