@@ -99,7 +99,7 @@ public function __construct(ReserveRepository $reserve)
                 ]);
         }
     }
-
+#show list of bus by time of departure in ascending order
     public function apiShowBus(Request $request)
     {
         try {
@@ -151,14 +151,14 @@ public function __construct(ReserveRepository $reserve)
             ]);
         }
     }
-
-    public function apiShowBusOrderBy(Request $request)
+#show bus list by order of time of departure, model, No_of_sits, price
+    public function apiShowBusOrderBy( Request $request)
     {
         try {
 
             $orderBy = $request->input('orderBy');
 
-            $reserve =  Reserve::with(['vehicle' => function ($query){
+            $data =  Reserve::with(['vehicle' => function ($query){
                 $query->select('id', 'name', 'model');
             }])
                 ->select('origin', 'destination', 'departure_date','departure_time',
@@ -167,22 +167,22 @@ public function __construct(ReserveRepository $reserve)
                 ->where('origin', $request->origin)
                 ->where('destination', $request->destination)
                 ->when($orderBy, function ($query) {
-                    return $query->orderBy('price', 'asc');
+                    return $query->orderBy('No_of_sits', 'desc');
                 }, function ($query) {
                     return $query->orderBy('model');
                 },function ($query) {
                     return $query->orderBy('departure_time', 'asc');
                 },function ($query) {
-                    return $query->orderBy('No_of_sits', 'dsc');
+                    return $query->orderBy('price', 'asc');
                 })
                 ->get();
 
 
 
-            $orderBy = $request->input('orderBy');
-
+//            $orderBy = $request->input('orderBy');
+//
 //           $data =  $this->reserve->list($orderBy)
-//                ->when($orderBy, function ($query) {
+//                ->when($orderBy, function ($query) use ($orderBy){
 //                    return $query->orderBy('price', 'asc');
 //                }, function ($query) {
 //                    return $query->orderBy('model');
@@ -192,13 +192,15 @@ public function __construct(ReserveRepository $reserve)
 //                    return $query->orderBy('No_of_sits', 'dsc');
 //                })
 //                ->get();
-            if(empty($reserve))
+
+
+            if(empty($data))
             {
                 return response()->json([
                     "success" => true,
                     'status' => 200,
                     "message" => "موردی یافت نشد",
-                    "data" => $reserve
+                    "data" => $data
                 ]);
             }
 
@@ -206,7 +208,7 @@ public function __construct(ReserveRepository $reserve)
                 "success" => true,
                 'status' => 200,
                 "message" => "لیست وسایل نقلیه در تاریخ مورد نظر:",
-                "data" => $reserve
+                "data" => $data
             ]);
         } catch (Throwable $e) {
             return response()->json([

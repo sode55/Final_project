@@ -14,7 +14,7 @@ class CommentController extends Controller
 {
 //    use Responses;
 
-
+#save compoany's comments
     public function apiAddComment(CommentRequest $request)
     {
         try {
@@ -45,7 +45,7 @@ class CommentController extends Controller
             ]);
         }
     }
-
+#show companies 's comments
     public function apiShowComments()
     {
         try {

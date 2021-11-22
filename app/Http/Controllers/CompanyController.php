@@ -11,7 +11,7 @@ use Throwable;
 class CompanyController extends Controller
 {
 //    use Responses;
-
+#save data into database
     public function apiStoreCompany(CompanyRequest $request)
     {
         try {
@@ -42,7 +42,7 @@ class CompanyController extends Controller
                 ]);
         }
     }
-
+#show some companies
     public function apiShowCompany()
     {
         try {
