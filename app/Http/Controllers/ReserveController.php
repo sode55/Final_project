@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Reserve;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class ReserveController extends Controller
@@ -115,15 +116,6 @@ public function __construct(ReserveRepository $reserve)
               ->OrderBy('departure_time', 'asc')->get();
 
 
-
-//            $reserve = reserve::with(['vehicle' => function ($query) {
-//                $query->select('title', 'content', 'created_at', 'company_id');
-//            }])
-//                ->select('name','id')
-//                ->get();
-
-
-
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
 //            return $this->getError($response()->json(), $response()->status());
@@ -156,42 +148,32 @@ public function __construct(ReserveRepository $reserve)
     {
         try {
 
-            $orderBy = $request->input('orderBy');
-
-            $data =  Reserve::with(['vehicle' => function ($query){
-                $query->select('id', 'name', 'model');
-            }])
-                ->select('origin', 'destination', 'departure_date','departure_time',
-                    'No_of_sits', 'price', 'vehicle_id')
-                ->whereDate('departure_date', $request->preferred_date )
-                ->where('origin', $request->origin)
-                ->where('destination', $request->destination)
-                ->when($orderBy, function ($query) {
-                    return $query->orderBy('No_of_sits', 'desc');
-                }, function ($query) {
-                    return $query->orderBy('model');
-                },function ($query) {
-                    return $query->orderBy('departure_time', 'asc');
-                },function ($query) {
-                    return $query->orderBy('price', 'asc');
-                })
-                ->get();
-
-
-
 //            $orderBy = $request->input('orderBy');
 //
-//           $data =  $this->reserve->list($orderBy)
-//                ->when($orderBy, function ($query) use ($orderBy){
-//                    return $query->orderBy('price', 'asc');
-//                }, function ($query) {
-//                    return $query->orderBy('model');
-//                },function ($query) {
-//                    return $query->orderBy('departure_time', 'asc');
-//                },function ($query) {
-//                    return $query->orderBy('No_of_sits', 'dsc');
-//                })
-//                ->get();
+//
+//            $data = DB::table('reserves')
+//                ->join('vehicles', 'reserves.vehicle_id', '=', 'vehicles.id')
+//                ->select(
+//                    'reserves.origin',
+//                    'reserves.destination',
+//                    'reserves.departure_date',
+//                    'reserves.departure_time',
+//                    'reserves.price',
+//                    'reserves.no_of_sits',
+//                    'vehicles.model',
+//                    'vehicles.name',
+//                )
+//                ->whereDate('departure_date', $request->preferred_date )
+//                ->where('origin', $request->origin)
+//                ->where('destination', $request->destination)
+//                ->when($orderBy, function ($query) use ($orderBy) {
+//                    return $query->orderBy($orderBy, 'asc');
+//                })->get();
+
+
+
+           $data =  $this->reserve->list($request);
+
 
 
             if(empty($data))

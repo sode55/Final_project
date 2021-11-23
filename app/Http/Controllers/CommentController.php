@@ -45,7 +45,7 @@ class CommentController extends Controller
             ]);
         }
     }
-#show companies 's comments
+#show company's comments
     public function apiShowComments()
     {
         try {
@@ -61,7 +61,7 @@ class CommentController extends Controller
 //                ->get();
 
 
-
+//
             $comments = Company::with(['comments' => function ($query) {
                 $query->select('title', 'content', 'created_at', 'company_id');
             }])
