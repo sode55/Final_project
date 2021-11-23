@@ -22,6 +22,12 @@ class Reserve extends Model
 
     public function scopeFilter($query, $request)
     {
+//        $query->when($request->preferred_date ?? false,
+//            fn($query, $request) => $query->whereDate('preferred_date', $request),
+//            $request->origin ?? false,
+//            fn($query, $request) => $query->where('origin', $request),
+//            $request->destination ?? false,
+//            fn($query, $request) => $query->where('destination', $request));
 
         $query->when($request->preferred_date ?? false,
             function ($query) use ($request) {
@@ -42,7 +48,7 @@ class Reserve extends Model
 
     public function scopeSelectReserve($query, $select)
     {
-        $reserve_callback = function ($query) use ($select) {
+        $reserve_callback = function ($query) use ($select){
             $query->select($select);
         };
         return $query->with(['reserve' => $reserve_callback])->where('vehicle_id', 'id');
@@ -50,7 +56,7 @@ class Reserve extends Model
 
     public function scopeSelectVehicle($query, $select)
     {
-        $vehicle_callback = function ($query) use ($select) {
+        $vehicle_callback = function ($query) use ($select){
             $query->select($select);
         };
         return $query->with(['vehicle' => $vehicle_callback])->where('vehicle_id', 'id');
@@ -59,9 +65,10 @@ class Reserve extends Model
 
     public function scopeOrderByFilter($request, $query)
     {
-        $orderBy = $request->orderBy;
+        $orderBy = $request->input('orderBy');
         $query->when($orderBy, function ($query) use ($orderBy) {
             return $query->orderBy($orderBy, 'asc');
         });
     }
+
 }

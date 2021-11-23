@@ -147,30 +147,7 @@ public function __construct(ReserveRepository $reserve)
     public function apiShowBusOrderBy( Request $request)
     {
         try {
-
-//            $orderBy = $request->input('orderBy');
-//
-//
-//            $data = DB::table('reserves')
-//                ->join('vehicles', 'reserves.vehicle_id', '=', 'vehicles.id')
-//                ->select(
-//                    'reserves.origin',
-//                    'reserves.destination',
-//                    'reserves.departure_date',
-//                    'reserves.departure_time',
-//                    'reserves.price',
-//                    'reserves.no_of_sits',
-//                    'vehicles.model',
-//                    'vehicles.name',
-//                )
-//                ->whereDate('departure_date', $request->preferred_date )
-//                ->where('origin', $request->origin)
-//                ->where('destination', $request->destination)
-//                ->when($orderBy, function ($query) use ($orderBy) {
-//                    return $query->orderBy($orderBy, 'asc');
-//                })->get();
-
-
+            
 
            $data =  $this->reserve->list($request);
 
