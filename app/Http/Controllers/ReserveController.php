@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReserveRequest;
 use App\Repositories\ReserveRepository;
+use App\Http\Requests\ReserveRequest;
 use APP\Http\Traits\Responses;
 use Illuminate\Http\Request;
 use App\Models\Reserve;
@@ -147,7 +147,7 @@ public function __construct(ReserveRepository $reserve)
     public function apiShowBusOrderBy( Request $request)
     {
         try {
-            
+
 
            $data =  $this->reserve->list($request);
 

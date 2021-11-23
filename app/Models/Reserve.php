@@ -22,13 +22,6 @@ class Reserve extends Model
 
     public function scopeFilter($query, $request)
     {
-//        $query->when($request->preferred_date ?? false,
-//            fn($query, $request) => $query->whereDate('preferred_date', $request),
-//            $request->origin ?? false,
-//            fn($query, $request) => $query->where('origin', $request),
-//            $request->destination ?? false,
-//            fn($query, $request) => $query->where('destination', $request));
-
         $query->when($request->preferred_date ?? false,
             function ($query) use ($request) {
                 return $query->whereDate('departure_date', $request);

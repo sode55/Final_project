@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Reserve;
 use Illuminate\Support\Facades\DB;
+use App\Models\Reserve;
 
 class ReserveRepository
 {
