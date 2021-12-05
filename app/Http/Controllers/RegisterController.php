@@ -14,7 +14,7 @@ class RegisterController extends Controller
 {
     use Responses;
 
-    public function apiRegister(RegisterStoreRequest $request)
+    public function register(RegisterStoreRequest $request)
     {
         try {
             $request->validated();
@@ -22,6 +22,7 @@ class RegisterController extends Controller
             $data = [
                 'name' => $request->name,
                 'username' => $request->username,
+                'mobile' => $request->mobile,
                 'email' => $request->email,
                 'password' => bcrypt($request->password)
             ];

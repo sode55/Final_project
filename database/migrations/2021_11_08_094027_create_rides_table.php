@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReservesTable extends Migration
+class CreateRidesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateReservesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reserves', function (Blueprint $table) {
+        Schema::create('rides', function (Blueprint $table) {
             $table->id();
             $table->string('origin');
             $table->string('destination');
             $table->date('departure_date');
             $table->Time('departure_time');
-            $table->integer('sit_No')->nullable();
-            $table->integer('No_of_sits')->nullable();
+            $table->integer('remaining_capacity')->nullable();
             $table->bigInteger('price')->nullable();
-            $table->bigInteger('vehicle_id', )->unsigned()->index()->nullable()->nullable();
-            $table->foreign('vehicle_id')->references('id')->on('vehicles');
+           $table->bigInteger('vehicle_id', )->unsigned()->index()->nullable()->nullable();
+           $table->foreign('vehicle_id')->references('id')->on('vehicles');
             $table->timestamps();
         });
     }

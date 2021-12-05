@@ -14,12 +14,10 @@ class CommentController extends Controller
 {
 //    use Responses;
 
-#save compoany's comments
-    public function apiAddComment(CommentRequest $request)
+#save company's comments
+    public function store(CommentRequest $request)
     {
         try {
-
-            $request->validated();
 
             $comment = Comment::create([
                 'title' => $request->title,
@@ -46,22 +44,10 @@ class CommentController extends Controller
         }
     }
 #show company's comments
-    public function apiShowComments()
+    public function show()
     {
         try {
 
-//            $comments = DB::table('comments')
-//                ->join('companies', 'comments.company_id', '=', 'companies.id')
-//                ->select(
-//                    'companies.name',
-//                    'comments.title',
-//                    'comments.content',
-//                    'comments.created_at',
-//                )
-//                ->get();
-
-
-//
             $comments = Company::with(['comments' => function ($query) {
                 $query->select('title', 'content', 'created_at', 'company_id');
             }])

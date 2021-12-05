@@ -22,9 +22,9 @@ class Vehicle extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function reserves()
+    public function rides()
     {
-        return $this->hasMany(Reserve::class);
+        return $this->hasMany(Ride::class);
     }
 
 

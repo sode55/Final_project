@@ -15,7 +15,7 @@ class LoginController extends Controller
     use Responses;
 
 
-    public function apiLogin(LoginStoreRequest $request)
+    public function login(LoginStoreRequest $request)
     {
         try {
 

@@ -23,6 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'mobile',
         'email',
         'password',
     ];
@@ -55,6 +56,11 @@ class User extends Authenticatable
 
     public function companies()
     {
-        return $this->belongsTo(Company::class);
+        return $this->hasMany(Company::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

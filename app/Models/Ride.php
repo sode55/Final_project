@@ -5,19 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reserve extends Model
+class Ride extends Model
 {
     use HasFactory;
 
-    protected $table = 'reserves';
+    protected $table = 'rides';
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['vehicle_id'];
+    protected $hidden = ['vehicle_id', 'id'];
 
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 
     public function scopeFilter($query, $request)
@@ -33,18 +38,14 @@ class Reserve extends Model
                 return $query->where('destination', $request);
             });
 
-//       return $query->whereDate('departure_date',  $request->preferred_date)
-//            ->where('origin', $request->origin)
-//            ->where('destination', $request->destination);
-
     }
 
-    public function scopeSelectReserve($query, $select)
+    public function scopeSelectRide($query, $select)
     {
-        $reserve_callback = function ($query) use ($select){
+        $ride_callback = function ($query) use ($select){
             $query->select($select);
         };
-        return $query->with(['reserve' => $reserve_callback])->where('vehicle_id', 'id');
+        return $query->with(['ride' => $ride_callback])->where('vehicle_id', 'id');
     }
 
     public function scopeSelectVehicle($query, $select)
@@ -56,12 +57,24 @@ class Reserve extends Model
 
     }
 
-    public function scopeOrderByFilter($request, $query)
+    public function scopeOrderByFilter($query, $request)
     {
-        $orderBy = $request->input('orderBy');
-        $query->when($orderBy, function ($query) use ($orderBy) {
-            return $query->orderBy($orderBy, 'asc');
-        });
+        return $query->orderBy($request->input('orderBy'), 'desc');
     }
+
+
+//    public function scopeFilter($query, $sort, $request)
+//    {
+////        foreach ($sort as $column => $direction) {
+////            $query->orderBy($column, $direction);
+////        }
+////
+////        return $query;
+//
+//        foreach ($request->get($request->orderBy) as $column => $direction) {
+//            $query->orderBy($column, $direction);
+//        }
+//            return $query;
+//    }
 
 }

@@ -2,40 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\ReserveRepository;
-use App\Http\Requests\ReserveRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\RideStoreRequest;
+use App\Repositories\RideRepository;
+use App\Http\Requests\RideRequest;
 use APP\Http\Traits\Responses;
 use Illuminate\Http\Request;
-use App\Models\Reserve;
+use App\Models\Vehicle;
+use App\Models\Ride;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
+
 use Throwable;
 
-class ReserveController extends Controller
+class RideController extends Controller
 {
 //    use Responses;
 
-public function __construct(ReserveRepository $reserve)
+public function __construct(RideRepository $rideRepository)
 {
-    $this->reserve = $reserve;
+    $this->rideRepository = $rideRepository;
 }
 
-    public function apiAddDateTime(ReserveRequest $request)
+    public function store(RideRequest $request)
 
     {
 
         try {
 
-            $request->validated();
+            $vehicleCapacity = Vehicle::find($request->vehicle_id);
 
-            $reserve = Reserve::create([
+            $ride = Ride::create([
                 'origin' => $request->origin,
                 'destination' => $request->destination,
                 'departure_date' => $request->departure_date,
                 'departure_time' => $request->departure_time,
                 'price' => $request->price,
                 'vehicle_id' => $request->vehicle_id,
+                'remaining_capacity' => $vehicleCapacity->capacity,
             ]);
 
 
@@ -47,41 +52,41 @@ public function __construct(ReserveRepository $reserve)
                 "success" => true,
                 'status' => 200,
                 "message" => " ثبت با موفقیت انجام شد.",
-                "data" => $reserve
+                "data" => $ride
             ]);
         } catch (Throwable $e) {
             return response()->json([
                 'status' => $e->getCode(),
-                'error' => $e->getMessage(),            ]);
+                'error' => $e->getMessage(),
+                ]);
         }
     }
 
-    public function apiUpdateDateTime(ReserveRequest $request, $id)
+    public function update(RideRequest $request, $id)
     {
         try {
 
             $input = $request->all();
-            $request->validated();
 
-            $reserve = Reserve::find($id);
+            $ride = Ride::find($id);
 
             $user = auth('api')->user();
             $userRole = $user->role->role_name;
             $userCompany = $user->company_id;
 
-            $vehicleCompany = $reserve->vehicle->company_id;
+            $vehicleCompany = $ride->vehicle->company_id;
 
             if($userRole == 'company_owner' && $userCompany !=$vehicleCompany)
             {
                 return response()->json('unauthorized' , 403);
             }
 
-            $reserve->origin = $input['origin'];
-            $reserve->destination = $input['destination'];
-            $reserve->departure_date = $input['departure_date'];
-            $reserve->departure_time = $input['departure_time'];
-            $reserve->price = $input['price'];
-            $reserve->save();
+            $ride->origin = $input['origin'];
+            $ride->destination = $input['destination'];
+            $ride->departure_date = $input['departure_date'];
+            $ride->departure_time = $input['departure_time'];
+            $ride->price = $input['price'];
+            $ride->save();
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -91,7 +96,7 @@ public function __construct(ReserveRepository $reserve)
                 "success" => true,
                 'status' => 200,
                 "message" => "ویرایش با موفقیت انجام شد.",
-                "data" => $reserve
+                "data" => $ride
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -101,32 +106,25 @@ public function __construct(ReserveRepository $reserve)
         }
     }
 #show list of bus by time of departure in ascending order
-    public function apiShowBus(Request $request)
+
+    public function show(RideStoreRequest $request)
     {
         try {
 
-          $reserve =  Reserve::with(['vehicle' => function ($query){
-                $query->select('id', 'name', 'model');
-            }])
-              ->select('origin', 'destination', 'departure_date','departure_time',
-              'No_of_sits', 'price', 'vehicle_id')
-              ->whereDate('departure_date', $request->preferred_date )
-              ->where('origin', $request->origin)
-              ->where('destination', $request->destination)
-              ->OrderBy('departure_time', 'asc')->get();
+            $vehicles =  $this->rideRepository->vehicleList($request);
 
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
 //            return $this->getError($response()->json(), $response()->status());
 
-            if(empty($reserve))
+            if(empty($vehicles))
             {
                 return response()->json([
                     "success" => true,
                     'status' => 200,
                     "message" => "موردی یافت نشد",
-                    "data" => $reserve
+                    "data" => $vehicles
                 ]);
             }
 
@@ -134,7 +132,7 @@ public function __construct(ReserveRepository $reserve)
                 "success" => true,
                 'status' => 200,
                 "message" => "لیست وسایل نقلیه در تاریخ مورد نظر:",
-                "data" => $reserve
+                "data" => $vehicles
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -144,13 +142,12 @@ public function __construct(ReserveRepository $reserve)
         }
     }
 #show bus list by order of time of departure, model, No_of_sits, price
-    public function apiShowBusOrderBy( Request $request)
+
+    public function ShowOrderBy( RideStoreRequest $request)
     {
         try {
 
-
-           $data =  $this->reserve->list($request);
-
+           $data =  $this->rideRepository->list($request);
 
 
             if(empty($data))
@@ -159,7 +156,6 @@ public function __construct(ReserveRepository $reserve)
                     "success" => true,
                     'status' => 200,
                     "message" => "موردی یافت نشد",
-                    "data" => $data
                 ]);
             }
 

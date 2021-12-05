@@ -26,6 +26,7 @@ class RegisterStoreRequest extends FormRequest
         return [
             'name' => 'required|string',
             "username" => 'required|unique:users,username|min:3',
+            "mobile" => 'required|unique:users,mobile|regex:^(\+98?)?{?(0?9[0-9]{9,9}}?)$^',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/',
             'confirmPassword' => 'required|same:password',

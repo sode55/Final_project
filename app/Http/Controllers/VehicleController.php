@@ -18,12 +18,10 @@ class VehicleController extends Controller
 
 
 #Add new vehicle.
-    public function apiAddVehicle(VehicleRequest $request)
+    public function store(VehicleRequest $request)
 
     {
         try {
-
-            $request->validated();
 
             $vehicle = Vehicle::create([
                 'name' => $request->name,
@@ -54,13 +52,11 @@ class VehicleController extends Controller
     }
 
 #edit a vehicle
-    public function apiUpdateVehicle(VehicleRequest $request, $id)
+    public function update(VehicleRequest $request, $id)
     {
         try {
 
             $input = $request->all();
-            $request->validated();
-
             $vehicle = Vehicle::find($id);
 
             $user = auth('api')->user();
@@ -101,7 +97,7 @@ class VehicleController extends Controller
     }
 
 #arcive a vehicle
-    public function apiAddToArchive($id)
+    public function archive($id)
     {
         try {
 
@@ -139,7 +135,7 @@ class VehicleController extends Controller
     }
 
 #show archived vehicle
-    public function apiShowArchive()
+    public function ShowArchive()
     {
         try {
 

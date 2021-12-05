@@ -7,54 +7,52 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\LoginStoreRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Throwable;
 
 
 class PassportAuthController extends Controller
 {
-    public function apiRegister(Request $request)
+    public function register(RegisterStoreRequest $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            "username" => 'required|unique:users,username|min:3',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/',
-            'confirmPassword' => 'required|same:password',
-        ]);
-
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->first(), 422);
-        }
+        try{
 
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
+            'mobile' => $request->mobile,
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
 
         $token = $user->createToken('LaravelAuthApp')->accessToken;
 
-        return response()->json([
-            "success" => true,
-            'status' => 200,
-            "message" => "ثبت نام با موفقیت انجام شد.",
-            "data" => $user,
-            'token' => $token,
+
+//            return  $this->getMessage($response->json(), $response->status());
+//        }catch (Throwable $e) {
+//            return $this->getError($response()->json(), $response()->status());
+
+            return response()->json([
+                "success" => true,
+                'status' => 200,
+                "message" => "ثبت نام با موفقیت انجام شد.",
+                "data" => $user,
+                'token' => $token,
             ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'status' => $e->getCode(),
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
      * Login
      */
-    public function apiLogin(Request $request)
+    public function login(LoginStoreRequest $request)
     {
+        try{
 
-        $request->validate([
-            'username' => 'required|exists:users,username',
-            'password' => 'required'
-        ]);
 
         $user = [
             'username' => $request->username,
@@ -63,15 +61,25 @@ class PassportAuthController extends Controller
 
         if (auth()->attempt($user)) {
             $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
+
+            //            return  $this->getMessage($response->json(), $response->status());
+//        }catch (Throwable $e) {
+//            return $this->getError($response()->json(), $response()->status());
+
             return response()->json([
                 "success" => true,
                 'status' => 200,
-                "message" => "ورود با موفقیت انجام شد.",
+                "message" => "ثبت نام با موفقیت انجام شد.",
                 "data" => $user,
                 'token' => $token,
             ]);
-        } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
         }
+        } catch (Throwable $e) {
+                return response()->json([
+                    'status' => $e->getCode(),
+                    'error' => $e->getMessage(),
+                ]);
+            }
     }
+
 }

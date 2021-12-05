@@ -18,7 +18,7 @@ class CreateVehiclesTable extends Migration
             $table->string('name');
             $table->string('model');
             $table->string('accessories');
-            $table->integer('No_of_sits');
+            $table->integer('capacity');
             $table->string('plate_number');
             $table->bigInteger('company_id')->unsigned()->index();
             $table->foreign('company_id')->references('id')->on('companies');

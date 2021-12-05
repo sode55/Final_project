@@ -12,17 +12,19 @@ class CompanyController extends Controller
 {
 //    use Responses;
 #save data into database
-    public function apiStoreCompany(CompanyRequest $request)
+    public function store(CompanyRequest $request)
     {
         try {
-            $request->validated();
 
+            $user = auth('api')->user();
+            $userId = $user->id;
 
             $company = Company::create([
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'address' => $request->address,
+                'user_id' => $userId,
               ]);
 
 
@@ -43,7 +45,7 @@ class CompanyController extends Controller
         }
     }
 #show some companies
-    public function apiShowCompany()
+    public function show()
     {
         try {
             $company = Company::inRandomOrder()->limit(5)->get(['name', 'phone_number', 'email', 'address']);

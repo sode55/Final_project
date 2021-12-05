@@ -5,27 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Booking extends Model
 {
     use HasFactory;
 
-    protected $table = 'companies';
+    protected $table = 'bookings';
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['id'];
-
-    public function vehicles(){
-        return $this->hasMany(Vehicle::class);
-    }
+    protected $hidden = ['ride_id', 'id'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function comments()
+    public function ride()
     {
-        return $this->hasMany(Comment::class);
+        return $this->belongsTo(Ride::class);
     }
 }

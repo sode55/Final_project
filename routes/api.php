@@ -24,28 +24,33 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::post('login', 'LoginController@apiLogin');
 
 
-Route::post('/login', 'PassportAuthController@apiLogin');
-Route::post('/register', 'PassportAuthController@apiRegister');
+Route::post('/login', 'PassportAuthController@login');
+Route::post('/register', 'PassportAuthController@register');
 
 Route::middleware(['auth:api', 'permission:superUser, admin, company_owner'])->group(function ()
 {
-    Route::post('vehicle/store', 'VehicleController@apiAddVehicle');
-    Route::put('vehicle/edit/{id}', 'VehicleController@apiUpdateVehicle');
-    Route::delete('bus/{id}', 'VehicleController@apiAddToArchive');
-    Route::get('show/archive', 'VehicleController@apiShowArchive');
+    Route::post('vehicles', 'VehicleController@store');
+    Route::put('vehicles/{id}', 'VehicleController@update');
+    Route::delete('vehicles/{id}', 'VehicleController@archive');
+    Route::get('vehicles', 'VehicleController@ShowArchive');
 
-    Route::post('date/store', 'ReserveController@apiAddDateTime');
-    Route::put('date/edit/{id}', 'ReserveController@apiUpdateDateTime');
+    Route::post('rides', 'RideController@store');
+    Route::put('rides/{id}', 'RideController@update');
 });
 
 Route::middleware('auth:api')
-    ->post('/company/store', 'CompanyController@apiStoreCompany');
-Route::get('/company/show', 'CompanyController@apiShowCompany');
+    ->post('/companies', 'CompanyController@store');
+Route::get('/companies', 'CompanyController@show');
 
 
 Route::middleware(['auth:api', 'permission:superUser, admin, company_owner'])
-    ->post('/comment/store', 'CommentController@apiAddComment');
-Route::get('/comments/show', 'CommentController@apiShowComments');
+    ->post('/comments', 'CommentController@store');
+Route::get('/comments', 'CommentController@show');
 
-Route::post('/bus/show', 'ReserveController@apiShowBus');
-Route::post('/bus/show/orderBY', 'ReserveController@apiShowBusOrderBy');
+Route::post('/bus', 'RideController@Show');
+Route::post('/bus/orderBy', 'RideController@ShowOrderBy');
+
+Route::get('/seats/{id}', 'BookingController@ShowSeats');
+Route::middleware('auth:api')->post('/bookings', 'BookingController@store');
+Route::middleware('auth:api')->get('/tickets/{id}', 'BookingController@showTicket');
+
