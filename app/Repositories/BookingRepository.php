@@ -44,28 +44,18 @@ class BookingRepository
 
     }
 
-    public function bookingInfo($userId)
+    public function receipt($userId)
     {
 
-        $ticket =  DB::table('bookings')
+        $receipt =  DB::table('bookings')
             ->where('bookings.user_id', '=', $userId)
             ->join('rides', 'rides.id', '=', 'bookings.ride_id')
-            ->join('vehicles', 'vehicles.id', '=', 'rides.vehicle_id')
-            ->groupBy( 'passenger_name', 'origin', 'destination', 'departure_date', 'departure_time',
-                'price', 'model', 'name')
-            ->select('bookings.passenger_name', 'rides.origin', 'rides.destination',
-                'rides.departure_date', 'rides.departure_time', 'rides.price',
-                'vehicles.model', 'vehicles.name')
-            ->addSelect(DB::raw('COUNT(seat) as passenger_number'),
+            ->groupBy('price')
+            ->select(DB::raw('COUNT(seat) as passenger_number'),
                 DB::raw('SUM(price) as totalPrice'))
-            ->limit(1)->get()->toArray();
+           ->get();
 
-        $seats = Booking::where('user_id', $userId)->pluck('seat')->toArray();
-        $seats = implode(',', $seats);
-
-        $ticket[] = ['seats' => $seats];
-
-        return $ticket;
+        return $receipt;
     }
 
     public function allSeats($vehicleId)
@@ -97,6 +87,29 @@ public function findVehicleId()
 
         return $bookingId;
     }
+
+//    public function $ticket()
+//    {
+        //        $ticket =  DB::table('bookings')
+//            ->where('bookings.user_id', '=', $userId)
+//            ->join('rides', 'rides.id', '=', 'bookings.ride_id')
+//            ->join('vehicles', 'vehicles.id', '=', 'rides.vehicle_id')
+//            ->groupBy( 'passenger_name', 'origin', 'destination', 'departure_date', 'departure_time',
+//                'price', 'model', 'name')
+//            ->select('bookings.passenger_name', 'rides.origin', 'rides.destination',
+//                'rides.departure_date', 'rides.departure_time', 'rides.price',
+//                'vehicles.model', 'vehicles.name')
+//            ->addSelect(DB::raw('COUNT(seat) as passenger_number'),
+//                DB::raw('SUM(price) as totalPrice'))
+//            ->limit(1)->get()->toArray();
+
+//        $seats = Booking::where('user_id', $userId)->pluck('seat')->toArray();
+//        $seats = implode(',', $seats);
+//
+//        $ticket[] = ['seats' => $seats];
+
+        return $ticket;
+//    }
 
 }
 

@@ -52,5 +52,5 @@ Route::post('/bus/orderBy', 'RideController@ShowOrderBy');
 
 Route::get('/seats/{id}', 'BookingController@ShowSeats');
 Route::middleware('auth:api')->post('/bookings', 'BookingController@store');
-Route::middleware('auth:api')->get('/tickets/{id}', 'BookingController@showTicket');
+Route::middleware('auth:api')->get('/receipts', 'BookingController@ShowReceipt');
 

@@ -100,13 +100,14 @@ class BookingController extends Controller
     }
 
 
-    public function ShowTicket()
+    public function ShowReceipt()
     {
         try {
             $user = auth('api')->user();
             $userId = $user->id;
 
-            $ticket = $this->bookingRepository->bookingInfo($userId);
+            $receipt = $this->bookingRepository->receipt($userId);
+
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -114,8 +115,8 @@ class BookingController extends Controller
 
             return response()->json([
                 "success" => true,
-                "message" => "نمایش بلیط:",
-                "data" => $ticket
+                "message" => "نمایش رسید:",
+                "data" => $receipt
             ]);
         } catch (Throwable $e) {
             return response()->json([

@@ -60,7 +60,7 @@ class RideRepository
 //            ->OrderByFilter()
             ->get();
 
-        
+
         return $list;
     }
     public function findAllSeats()
