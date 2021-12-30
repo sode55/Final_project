@@ -20,7 +20,7 @@ class CreateRidesTable extends Migration
             $table->date('departure_date');
             $table->Time('departure_time');
             $table->integer('remaining_capacity')->nullable();
-            $table->bigInteger('price')->nullable();
+            $table->float('price')->nullable();
            $table->bigInteger('vehicle_id', )->unsigned()->index()->nullable()->nullable();
            $table->foreign('vehicle_id')->references('id')->on('vehicles');
             $table->timestamps();

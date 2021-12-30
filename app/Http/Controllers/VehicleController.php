@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Symfony\Component\Console\Input\Input;
+use App\Repositories\VehicleRepository;
 use App\Http\Requests\VehicleRequest;
-use APP\Http\Traits\Responses;
-use Illuminate\Http\Request;
+//use App\Http\Traits\Responses;
 use App\Models\Vehicle;
-use App\Models\User;
 use Throwable;
 
 
@@ -15,23 +13,19 @@ use Throwable;
 class VehicleController extends Controller
 {
 //    use Responses;
+    public $user;
 
+    public function __construct(VehicleRepository $vehicleRepository)
+    {
+        $this->user = auth('api')->user();
+        $this->vehicleRepository = $vehicleRepository;
+    }
 
-#Add new vehicle.
+//Add new vehicle.
     public function store(VehicleRequest $request)
-
     {
         try {
-
-            $vehicle = Vehicle::create([
-                'name' => $request->name,
-                'model' => $request->model,
-                'accessories' => $request->accessories,
-                'No_of_sits' => $request->No_of_sits,
-                'plate_number' => $request->plate_number,
-                'company_id' => $request->company_id,
-            ]);
-
+           $data = $this->vehicleRepository->save($request);
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -41,7 +35,7 @@ class VehicleController extends Controller
                 "success" => true,
                 'status' => 200,
                 "message" => "وسیله نقلیه با موفقیت ثبت شد.",
-                "data" => $vehicle
+                "data" => $data
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -51,32 +45,19 @@ class VehicleController extends Controller
         }
     }
 
-#edit a vehicle
+//edit a vehicle
     public function update(VehicleRequest $request, $id)
     {
         try {
-
-            $input = $request->all();
+            $userRole = $this->user->role->role_name;
+            $userCompany = $this->user->company_id;
             $vehicle = Vehicle::find($id);
-
-            $user = auth('api')->user();
-            $userRole = $user->role->role_name;
-            $userCompany =$user->company_id;
-
             $vehicleCompany = $vehicle->company_id;
-
-
             if($userRole == 'company_owner' && $userCompany !=$vehicleCompany)
             {
                 return response()->json('unauthorized' , 403);
             }
-
-            $vehicle->name = $input['name'];
-            $vehicle->model = $input['model'];
-            $vehicle->accessories = $input['accessories'];
-            $vehicle->No_of_sits = $input['No_of_sits'];
-            $vehicle->plate_number = $input['plate_number'];
-            $vehicle->save();
+            $data = $this->vehicleRepository->edit($request, $id);
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -86,7 +67,7 @@ class VehicleController extends Controller
                 "success" => true,
                 'status' => 200,
                 "message" => "وسیله نقلیه با موفقیت ویرایش شد.",
-                "data" => $vehicle
+                "data" => $data
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -96,25 +77,19 @@ class VehicleController extends Controller
         }
     }
 
-#arcive a vehicle
+//arcive a vehicle
     public function archive($id)
     {
         try {
-
+            $userRole = $this->user->role->role_name;
+            $userCompany =$this->user->company_id;
             $vehicle = Vehicle::find($id);
-
-            $user = auth('api')->user();
-            $userRole = $user->role->role_name;
-            $userCompany =$user->company_id;
-
             $vehicleCompany = $vehicle->company_id;
-
 
             if($userRole == 'company_owner' && $userCompany !=$vehicleCompany) {
                 return response()->json('unauthorized', 403);
             }
-
-            $vehicle->delete();
+            $data = $this->vehicleRepository->destroy($id);
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -124,7 +99,7 @@ class VehicleController extends Controller
                 "success" => true,
                 'status' => 200,
                 "message" => "وسیله نقلیه با موفقیت آرشیو شد.",
-                "data" => $vehicle
+                "data" => $data
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -135,11 +110,10 @@ class VehicleController extends Controller
     }
 
 #show archived vehicle
-    public function ShowArchive()
+    public function Show()
     {
         try {
-
-            $archivedVehicle = Vehicle::onlyTrashed()->get();
+            $data = $this->vehicleRepository->list();
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -149,7 +123,7 @@ class VehicleController extends Controller
                 "success" => true,
                 'status' => 200,
                 "message" => "لیست وسایل نقلیه آرشیو شده",
-                "data" => $archivedVehicle
+                "data" => $data
             ]);
         } catch (Throwable $e) {
             return response()->json([

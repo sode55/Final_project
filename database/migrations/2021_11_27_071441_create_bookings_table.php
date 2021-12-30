@@ -18,7 +18,7 @@ class CreateBookingsTable extends Migration
             $table->string('passenger_name');
             $table->string('gender');
             $table->string('seat');
-            $table->string('number_of_passengers')->nullable();
+            $table->float('booking_price');
             $table->string('status')->default('in_process');
             $table->unsignedBigInteger('ride_id');
             $table->foreign('ride_id')->references('id')->on('rides');

@@ -15,11 +15,11 @@ class CompanySeeder extends Seeder
     public function run()
     {
         $companies = [
-            ['name' => 'seir_o_safar', 'phone_number' => '+982133333333', 'email' => 'seir_o_safar@gmail.com', 'address' => 'tehran',
+            ['company_name' => 'seir_o_safar', 'phone_number' => '+982133333333', 'email' => 'seir_o_safar@gmail.com', 'address' => 'tehran',
                 'user_id' => 4, 'created_at' => '2021-10-08 ', 'updated_at' => '2021-10-08'],
-            ['name' => 'mahan', 'phone_number' => '+982144444444','email' => 'mahan@gmail.com','address' => 'tehran',
+            ['company_name' => 'mahan', 'phone_number' => '+982144444444','email' => 'mahan@gmail.com','address' => 'tehran',
                 'user_id' =>1, 'created_at' => '2021-10-08 ', 'updated_at' => '2021-10-08'],
-            ['name' => 'hamsafar', 'phone_number' => '+982155555555','email' => 'hamsafar@gmail.com','address' => 'tehran',
+            ['company_name' => 'hamsafar', 'phone_number' => '+982155555555','email' => 'hamsafar@gmail.com','address' => 'tehran',
                 'user_id' => 2, 'created_at' => '2021-10-08', 'updated_at' => '2021-10-08'],
 
         ];

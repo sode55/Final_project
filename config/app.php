@@ -175,6 +175,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
+        Shetabit\Payment\Provider\PaymentServiceProvider::class,
+        App\Providers\PaymentServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -229,6 +232,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Pay' => Shetabit\Payment\Facade\Payment::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

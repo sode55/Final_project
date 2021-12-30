@@ -76,4 +76,33 @@ class RideRepository
 
         return $reservedSests;
     }
+
+    public function save($request, $capacity)
+    {
+        $ride = Ride::create([
+            'origin' => $request->origin,
+            'destination' => $request->destination,
+            'departure_date' => $request->departure_date,
+            'departure_time' => $request->departure_time,
+            'price' => $request->price,
+            'vehicle_id' => $request->vehicle_id,
+            'remaining_capacity' => $capacity,
+        ]);
+
+        return $ride;
+    }
+
+    public function edit($request, $id)
+    {
+        $ride = Ride::find($id);
+        $input = $request->all();
+        $ride->origin = $input['origin'];
+        $ride->destination = $input['destination'];
+        $ride->departure_date = $input['departure_date'];
+        $ride->departure_time = $input['departure_time'];
+        $ride->price = $input['price'];
+        $ride->save();
+
+        return $ride;
+    }
 }

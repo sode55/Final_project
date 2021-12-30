@@ -3,28 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentRequest;
-use Illuminate\Support\Facades\DB;
-use APP\Http\Traits\Responses;
-use Illuminate\Http\Request;
-use App\Models\Company;
-use App\Models\Comment;
+use App\Repositories\CommentRepository;
 use Throwable;
 
 class CommentController extends Controller
 {
 //    use Responses;
 
-#save company's comments
+public function __construct(CommentRepository $commentRepository)
+{
+    $this->commentRepository = $commentRepository;
+}
+
+//save company's comments
     public function store(CommentRequest $request)
     {
         try {
-
-            $comment = Comment::create([
-                'title' => $request->title,
-                'content' => $request->content,
-                'company_id' => $request->company_id,
-            ]);
-
+           $data = $this->commentRepository->save($request);
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -34,7 +29,7 @@ class CommentController extends Controller
                 "success" => true,
                 'status' => 200,
                 "message" => "نظرات شما با موفقیت ثبت شد.",
-                "data" => $comment
+                "data" => $data
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -43,19 +38,12 @@ class CommentController extends Controller
             ]);
         }
     }
-#show company's comments
+//show company's comments
     public function show()
     {
         try {
 
-            $comments = Company::with(['comments' => function ($query) {
-                $query->select('title', 'content', 'created_at', 'company_id');
-            }])
-                ->select('name','id')
-                ->get();
-
-
-
+            $data = $this->commentRepository->list();
 
 //            return  $this->getMessage($response->json(), $response->status());
 //        }catch (Throwable $e) {
@@ -65,7 +53,7 @@ class CommentController extends Controller
                 "success" => true,
                 'status' => 200,
                 "message" => "نظرات شرکت های طرف قرارداد:",
-                "data" =>$comments
+                "data" =>$data
             ]);
         } catch (Throwable $e) {
             return response()->json([
@@ -74,5 +62,4 @@ class CommentController extends Controller
             ]);
         }
     }
-
 }
